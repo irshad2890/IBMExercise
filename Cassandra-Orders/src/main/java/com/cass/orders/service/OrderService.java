@@ -96,7 +96,7 @@ public class OrderService {
 			}
 			else if(errorList.stream()
 					.map(OrderError::getErrorCode)
-					.collect(Collectors.toList()).contains("404")) {
+					.collect(Collectors.toList()).contains("410")) {
 				order.setStatus("BackOrdered");
 				order.setLineTotal("0");
 				order.setPublished("NA");
