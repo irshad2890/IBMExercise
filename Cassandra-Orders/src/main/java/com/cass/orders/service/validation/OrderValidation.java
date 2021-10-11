@@ -29,9 +29,9 @@ public class OrderValidation implements Validation {
 			try {
 				String avlQty = inventoryAdapter.getAvailableQuantity(order.getProductId());
 				if(Integer.valueOf(avlQty) < Integer.valueOf(order.getQuantity())) {
-					errorList.add(new OrderError(ErrorCodes.ERR404.getKey(), ErrorCodes.ERR404.getValue()));
+					errorList.add(new OrderError(ErrorCodes.ERR410.getKey(), ErrorCodes.ERR410.getValue()));
 				}
-			}catch(InventoryServiceException invEx) {
+			}catch(Exception ex) {
 				errorList.add(new OrderError(ErrorCodes.ERR500.getKey(), ErrorCodes.ERR500.getValue()));
 			}
 			

@@ -108,17 +108,30 @@ class CassandraOrdersApplicationTests {
 	}
 	
 	@Test
-	void createOrderTestNeg() {
-		Order order = new Order("9001", "US", "Irshad", "1234", "BT06", "1", "0", "BackOrdered", "NA");
-		InventoryDemandDTO invDemandDto = new InventoryDemandDTO("9011-BT06", "Reserved", "9011", "BT06", "2");
-		ProductDTO product = new ProductDTO("BT06", "6 Seater Dining Tabl", "150");
+	void createOrderTestProductNA() {
+		Order order = new Order("9001", "US", "Irshad", "1234", "BT16", "1", null, null, null);
+		InventoryDemandDTO invDemandDto = new InventoryDemandDTO("9011-BT16", "Reserved", "9011", "BT16", "2");
 		List<OrderError> errors = new ArrayList<>();
 		errors.add(new OrderError(ErrorCodes.ERR404.getKey(), ErrorCodes.ERR404.getValue()));
 		try {
-			when(productAdapter.productCall("BT06")).thenReturn(product);
 			when(orderRepo.save(order)).thenReturn(order);
 			when(validation.validate(order)).thenReturn(errors);
-			when(inventoryAdapter.getAvailableQuantity(order.getProductId())).thenReturn("10");
+			when(inventoryAdapter.createDemand(invDemandDto)).thenReturn(invDemandDto);
+			assertEquals(null, ordSvc.createOrder(order).getStatus());
+		}catch(Exception ex) {
+			
+		}
+	}
+	
+	@Test
+	void createOrderTestQtyNA() {
+		Order order = new Order("9001", "US", "Irshad", "1234", "BT06", "1", "0", "BackOrdered", "NA");
+		InventoryDemandDTO invDemandDto = new InventoryDemandDTO("9011-BT06", "Reserved", "9011", "BT06", "2");
+		List<OrderError> errors = new ArrayList<>();
+		errors.add(new OrderError(ErrorCodes.ERR410.getKey(), ErrorCodes.ERR410.getValue()));
+		try {
+			when(orderRepo.save(order)).thenReturn(order);
+			when(validation.validate(order)).thenReturn(errors);
 			when(inventoryAdapter.createDemand(invDemandDto)).thenReturn(invDemandDto);
 			assertEquals("BackOrdered", ordSvc.createOrder(order).getStatus());
 		}catch(Exception ex) {

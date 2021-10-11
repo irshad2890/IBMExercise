@@ -86,7 +86,6 @@ public class OrderService {
 				order.setStatus("Created");
 				order.setLineTotal(calculateLineTotal(productId, ordQty));
 				order.setPublished(setPublishStatus(productId));
-				InventoryDemandDTO invDemandDto = createDemand(order);
 				orderRepo.save(order);
 			} 
 			else if(errorList.stream()
@@ -95,7 +94,9 @@ public class OrderService {
 				throw new InventoryServiceException("There are some issues connecting to either product service or "
 						+ "or Inventory Service");
 			}
-			else {
+			else if(errorList.stream()
+					.map(OrderError::getErrorCode)
+					.collect(Collectors.toList()).contains("410")) {
 				order.setStatus("BackOrdered");
 				order.setLineTotal("0");
 				order.setPublished("NA");
