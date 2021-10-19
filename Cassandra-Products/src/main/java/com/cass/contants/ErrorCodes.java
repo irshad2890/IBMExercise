@@ -2,7 +2,7 @@ package com.cass.contants;
 
 public enum ErrorCodes {
 	
-	ERR500("501", "INTERNAL SERVER ERROR");
+	ERR500("500", "INTERNAL SERVER ERROR");
 	
 	private String key;
 	private String value;
